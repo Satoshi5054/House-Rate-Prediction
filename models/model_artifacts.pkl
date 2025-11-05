@@ -1,0 +1,5 @@
+{
+  "numerical_features": ["BHK", "Size_in_SqFt", "Price_per_SqFt", "Year_Built", "Floor_No", "Total_Floors", "Age_of_Property", "Nearby_Schools", "Nearby_Hospitals"],
+  "categorical_features": ["State", "City", "Locality", "Property_Type", "Furnished_Status", "Public_Transport_Accessibility", "Parking_Space", "Security", "Amenities", "Facing", "Owner_Type", "Availability_Status"],
+  "x_train_columns": ["BHK", "Size_in_SqFt", "Price_per_SqFt", "Year_Built", "Floor_No", "Total_Floors", "Age_of_Property", "Nearby_Schools", "Nearby_Hospitals", ... (same order as X_train)]
+}
