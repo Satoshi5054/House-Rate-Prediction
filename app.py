@@ -1,7 +1,7 @@
 import streamlit as st
-import pandas as pd
-import pickle, json
-from src.features import predict_price_simple
+#import pandas as pd
+#import pickle, json
+#from src.features import predict_price_simple
 
 st.title("🏠 Property Price Predictor")
 """
@@ -41,7 +41,7 @@ input_data = {
     "Owner_Type": [st.selectbox("Owner Type", ["Owner", "Builder", "Agent"])],
     "Availability_Status": [st.selectbox("Availability", ["Ready_to_Move", "Under_Construction"])]
 }
-new_df = pd.DataFrame(input_data)
+#new_df = pd.DataFrame(input_data)
 """
 # Prediction
 if st.button("Predict Price"):
