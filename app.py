@@ -33,9 +33,9 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Location & Property")
-    State = st.text_input('State', all_states)
-    City = st.text_input('City', all_cities)
-    Locality = st.text_input('Locality', localities)
+    State = st.selectbox('State', all_states,placeholder='e.g. Maharashtra')
+    City = st.selectbox('City', all_cities,placeholder='e.g. Pune')
+    Locality = st.selectbox('Locality', localities,placeholder='Locality_490')
     Property_Type = st.selectbox('Property Type', ['Independent House', 'Apartment', 'Villa', 'Builder Floor'])
     Facing = st.selectbox('Facing', ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West', 'Missing'])
     
