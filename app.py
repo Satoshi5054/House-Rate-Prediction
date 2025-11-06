@@ -21,7 +21,10 @@ median_values = artifacts['median_values']
 target_variable = artifacts['target_variable']
 all_states = artifacts['all_states']
 state_city_mapping = artifacts['State-City Mapping']
-
+diff_city = "None"
+code_find_city  = '''
+cities = state_city_mapping.get(selected_state, [])
+'''
 # --- 2. BUILD THE USER INTERFACE (UI) ---
 st.set_page_config(page_title="Indian House Price Predictor", layout="wide")
 st.title('🏠 Indian House Price Predictor')
@@ -32,9 +35,10 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Location & Property")
-    State = st.text_input('State', all_states)
-    diff_city = state_city_mapping[State]
-    City = st.text_input('City', diff_city)
+    State = st.text_input('State (type exact name)',all_states)
+    st.code(code_find_city,language='python')
+    
+    City = st.text_input('City',cities)
     Locality = st.text_input('Locality', 'Locality_490')
     Property_Type = st.selectbox('Property Type', ['Independent House', 'Apartment', 'Villa', 'Builder Floor'])
     Facing = st.selectbox('Facing', ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West', 'Missing'])
