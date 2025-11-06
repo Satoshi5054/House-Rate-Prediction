@@ -20,11 +20,9 @@ model_columns = artifacts['model_columns']
 median_values = artifacts['median_values']
 target_variable = artifacts['target_variable']
 all_states = artifacts['all_states']
-state_city_mapping = artifacts['State-City Mapping']
-diff_city = "None"
-code_find_city  = '''
-cities = state_city_mapping.get(selected_state, [])
-'''
+all_cities = artifacts['all_cities']
+localities = artifacts['localities']
+
 # --- 2. BUILD THE USER INTERFACE (UI) ---
 st.set_page_config(page_title="Indian House Price Predictor", layout="wide")
 st.title('🏠 Indian House Price Predictor')
@@ -35,15 +33,9 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Location & Property")
-    State_input = st.text_input('State (type exact name)', all_states,value='', placeholder='e.g., Maharashtra')
-    _state_key_map = {k.lower(): k for k in state_city_mapping.keys()}
-    key = State_input.strip().lower()
-    State = _state_key_map[key]
-    diff_city = state_city_mapping.get(State, [])
-    st.info(f"Matched state: {State}")
-    # City picker from the mapped list
-    City = st.selectbox('City', diff_city)
-    Locality = st.text_input('Locality', 'Locality_490')
+    State = st.text_input('State', all_states)
+    City = st.text_input('City', all_cities)
+    Locality = st.text_input('Locality', localities)
     Property_Type = st.selectbox('Property Type', ['Independent House', 'Apartment', 'Villa', 'Builder Floor'])
     Facing = st.selectbox('Facing', ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West', 'Missing'])
     
