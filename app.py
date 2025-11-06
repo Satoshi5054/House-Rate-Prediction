@@ -41,6 +41,8 @@ with col1:
     Furnished_Status = st.radio("Furnished Status", ['Unfurnished', 'Semi-Furnished', 'Furnished'], index=0)
     Owner_Type = st.radio("Owner Type", ['Builder', 'Resale', 'New'], index=0)
     Availability_Status = st.radio("Availability Status", ['Under_Construction', 'Ready_to_Move', 'New_Launch'], index=0)
+    Nearby_Schools = st.slider('Nearby Schools (Count)', 0, 20, 8)
+    Nearby_Hospitals = st.slider('Nearby Hospitals (Count)', 0, 20, 1)
 
 with col2:
     st.subheader("Size & Build")
@@ -56,8 +58,7 @@ with col2:
     Public_Transport_Accessibility = st.radio("Public Transport", ['Low', 'Medium', 'High', 'Missing'], index=0)
     Parking_Space = st.radio("Parking Space", ['No', 'Yes', 'Missing'], index=0)
     Security = st.radio("Security", ['No', 'Yes', 'Missing'], index=0)
-    Nearby_Schools = st.slider('Nearby Schools (Count)', 0, 20, 8)
-    Nearby_Hospitals = st.slider('Nearby Hospitals (Count)', 0, 20, 1)
+    
 
 
 # --- 3. PREDICTION LOGIC ---
