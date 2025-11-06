@@ -7,11 +7,11 @@ import json
 # --- 1. LOAD ARTIFACTS ---
 # These files are created by running the 'train_and_save.py' script locally.
 # Load the pre-trained model
-model = joblib.load('model.pkl')
+model = joblib.load('artifacts/model.pkl')
 # Load the fitted scaler
-scaler = joblib.load('scaler.pkl')
+scaler = joblib.load('artifacts/scaler.pkl')
 # Load the artifacts (median values, column lists, etc.)
-with open('model_artifacts.json', 'r') as f:
+with open('artifacts/model_artifacts.json', 'r') as f:
     artifacts = json.load(f)
 
 numerical_features = artifacts['numerical_features']
