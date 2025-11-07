@@ -7,7 +7,8 @@ import json
 # --- 1. LOAD ARTIFACTS ---
 # These files are created by running the 'train_and_save.py' script locally.
 # Load the pre-trained model
-model = joblib.load('artifacts/model.pkl')
+bundle = joblib.load('artifacts/model.pkl')
+model = bundle['model']
 # Load the fitted scaler
 scaler = joblib.load('artifacts/scaler.pkl')
 # Load the artifacts (median values, column lists, etc.)
@@ -19,8 +20,10 @@ categorical_features = artifacts['categorical_features']
 state_city_mapping = artifacts['state_city_mapping']
 target_variable = artifacts['target_variable']
 all_states = list(state_city_mapping.keys())
-all_cities = list(state_city_mapping.values()),
+all_cities = [city for cities in state_city_mapping.values() for city in cities]
 localities = artifacts['localities']
+model_columns = artifacts["model_columns"]
+median_values = artifacts["median_values"]
 
 # --- 2. BUILD THE USER INTERFACE (UI) ---
 st.set_page_config(page_title="Indian House Price Predictor", layout="wide")
@@ -73,6 +76,7 @@ if st.button('Estimate Price', type="primary"):
         'Property_Type': [Property_Type],
         'BHK': [BHK],
         'Size_in_SqFt': [Size_in_SqFt],
+        'Price_in_Lakhs': [None],
         'Price_per_SqFt': [Price_per_SqFt],
         'Year_Built': [Year_Built],
         'Furnished_Status': [Furnished_Status],
@@ -92,9 +96,15 @@ if st.button('Estimate Price', type="primary"):
     
     # Convert to DataFrame
     new_df = pd.DataFrame(new_data)
-
+    new_df['total_sqft'] = new_df['Size_in_SqFt']
+    new_df['price_per_sqft'] = new_df.apply(
+    lambda row: row['Price_in_Lakhs'] * 100000 / row['Size_in_SqFt'] if pd.notna(row['Price_in_Lakhs']) and row['Size_in_SqFt'] > 0 else row['Price_per_SqFt'] * 100000,
+    axis=1
+)
+    new_df['age'] = 2025 - new_df['Year_Built']
+    new_df['sqft_per_bhk'] = new_df['Size_in_SqFt'] / new_df['BHK']
     # --- B. Apply feature engineering steps (matching the training data) ---
-    '''
+    
     # Handle missing values (using the saved median_values from training)
     for col in numerical_features:
         if new_df[col].isnull().sum() > 0:
@@ -103,7 +113,7 @@ if st.button('Estimate Price', type="primary"):
     for col in categorical_features:
         if new_df[col].isnull().sum() > 0:
             new_df[col] = new_df[col].fillna('Missing')
-    '''
+
     # Scale numerical features using the LOADED scaler
     new_df_scaled_num = pd.DataFrame(scaler.transform(new_df[numerical_features]),
                                      columns=numerical_features,
@@ -118,11 +128,10 @@ if st.button('Estimate Price', type="primary"):
     # --- C. Align columns ---
     # This is CRITICAL. Ensures the new data has the exact same columns as the training data.
     # It adds missing dummy columns (with 0) and removes extra columns (not in training).
-    #X_new_aligned = X_new_processed.reindex(columns=model_columns, fill_value=0)
-
+    X_new_aligned = X_new_processed.reindex(columns=model_columns, fill_value=0)
     # --- D. Make prediction ---
     try:
-        predicted_price = model.predict(X_new_processed)
+        predicted_price = model.predict(X_new_aligned)
         
         # --- E. Display result ---
         st.subheader('Prediction Result')
