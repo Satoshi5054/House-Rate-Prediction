@@ -16,11 +16,10 @@ with open('artifacts/model_artifacts.json', 'r') as f:
 
 numerical_features = artifacts['numerical_features']
 categorical_features = artifacts['categorical_features']
-model_columns = artifacts['model_columns']
-median_values = artifacts['median_values']
+state_city_mapping = artifacts['state_city_mapping']
 target_variable = artifacts['target_variable']
-all_states = artifacts['all_states']
-all_cities = artifacts['all_cities']
+all_states = list(state_city_mapping.keys())
+all_cities = list(state_city_mapping.values()),
 localities = artifacts['localities']
 
 # --- 2. BUILD THE USER INTERFACE (UI) ---
@@ -95,7 +94,7 @@ if st.button('Estimate Price', type="primary"):
     new_df = pd.DataFrame(new_data)
 
     # --- B. Apply feature engineering steps (matching the training data) ---
-    
+    '''
     # Handle missing values (using the saved median_values from training)
     for col in numerical_features:
         if new_df[col].isnull().sum() > 0:
@@ -104,7 +103,7 @@ if st.button('Estimate Price', type="primary"):
     for col in categorical_features:
         if new_df[col].isnull().sum() > 0:
             new_df[col] = new_df[col].fillna('Missing')
-
+    '''
     # Scale numerical features using the LOADED scaler
     new_df_scaled_num = pd.DataFrame(scaler.transform(new_df[numerical_features]),
                                      columns=numerical_features,
@@ -119,11 +118,11 @@ if st.button('Estimate Price', type="primary"):
     # --- C. Align columns ---
     # This is CRITICAL. Ensures the new data has the exact same columns as the training data.
     # It adds missing dummy columns (with 0) and removes extra columns (not in training).
-    X_new_aligned = X_new_processed.reindex(columns=model_columns, fill_value=0)
+    #X_new_aligned = X_new_processed.reindex(columns=model_columns, fill_value=0)
 
     # --- D. Make prediction ---
     try:
-        predicted_price = model.predict(X_new_aligned)
+        predicted_price = model.predict(X_new_processed)
         
         # --- E. Display result ---
         st.subheader('Prediction Result')
@@ -135,5 +134,4 @@ if st.button('Estimate Price', type="primary"):
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
         st.error("Please check your inputs and try again.")
-        st.write("Debug info (Aligned Columns):", X_new_aligned.columns)
-        st.write("Debug info (Model Columns):", model_columns)
+        st.write("Debug info (Aligned Columns):", X_new_processed.columns)
